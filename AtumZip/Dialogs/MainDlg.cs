@@ -1,4 +1,4 @@
-﻿using ARipper;
+﻿using Ace_Globals;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -13,12 +13,6 @@ using Assimp;
 
 namespace AtumZip
 {
-    public enum EncryptionType
-    {
-        None,
-        CR
-    }
-
     public partial class MainDlg : Form
     {
         public string m_File;

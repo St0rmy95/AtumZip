@@ -1,11 +1,10 @@
-﻿namespace ARipper
+﻿namespace Ace_Globals
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using AtumZip;
 
-    internal class Archive
+    public class Archive
     {
         private static byte[] DUMMY = new byte[4];
         private List<ArchiveEntry> entries;

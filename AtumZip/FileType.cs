@@ -30,7 +30,7 @@ public enum ImageListIndex
     Text
 }
 
-static class FileType
+public static class FileType
 {
     static List<fileInfo> m_Infos = new List<fileInfo>()
     {
@@ -55,10 +55,18 @@ static class FileType
         { new fileInfo(".flac", new short[] { 0x66, 0x4C, 0x61, 0x43 }, "Free Lossless Audio Codec File", ImageListIndex.Sound) },
         { new fileInfo(".doc", new short[] { 0xD0, 0xCF, 0x11, 0xE0, 0xA1, 0xB1, 0x1A, 0xE1 }, "MS Office Document", ImageListIndex.Config) },
         { new fileInfo(".webm", new short[] { 0xA, 0x45, 0xDF, 0xA3 }, "WebM Media Container", ImageListIndex.Video) },
+        { new fileInfo(".eff", null, "EffectInfo entry", ImageListIndex.Binary) },
+        { new fileInfo(".obi", null, "ObjectInfo entry", ImageListIndex.Binary) },
     };
 
-    public static string GetExtensionByHeader(byte[] data)
+    public static string GetExtensionByHeader(byte[] data, string archiveFileName)
     {
+        if (archiveFileName.ToLower().Contains("effectinfo"))
+            return ".eff";
+
+        if (archiveFileName.ToLower().Contains("objectinfo"))
+            return ".obi";
+
         // Checking the header is too insecure, better rely on the footer
         if (CheckTgaFooter(data)/* || CheckTgaHeader(data[1], data[2])*/)
             return ".tga";

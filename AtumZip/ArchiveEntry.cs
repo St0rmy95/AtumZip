@@ -1,12 +1,18 @@
-﻿namespace ARipper
+﻿namespace Ace_Globals
 {
     using System;
     using System.IO;
     using System.Runtime.InteropServices;
     using System.Text;
-    using AtumZip;
+    using Ace_Globals.Extensions;
 
-    internal class ArchiveEntry : IComparable<ArchiveEntry>, IEquatable<ArchiveEntry>
+    public enum EncryptionType
+    {
+        None,
+        CR
+    }
+
+    public class ArchiveEntry : IComparable<ArchiveEntry>, IEquatable<ArchiveEntry>
     {
         private static byte[] DUMMY = new byte[4];
         private string extension;
@@ -62,7 +68,7 @@
             }
             this.extension = this.readExtension();
             this.fileType = this.setFileType();
-            this.data = getData();
+            this.data = getData();  
         }
 
         public int CompareTo(ArchiveEntry other)
@@ -177,20 +183,34 @@
             writer.BaseStream.Write(BitConverter.GetBytes(this.id), 0, 4);
             writer.BaseStream.Write(BitConverter.GetBytes(this.sizeData), 0, 4);
             writer.BaseStream.Write(DUMMY, 0, 4);
-            byte[] bytes = Encoding.ASCII.GetBytes(this.name);
+            var bytes = Encoding.ASCII.GetBytes(this.name.ToNativeString(12));
             writer.BaseStream.Write(bytes, 0, bytes.Length);
-            for (int i = bytes.Length; i < 12; i++)
-            {
-                writer.BaseStream.WriteByte(0);
-            }
+
             byte[] buffer = this.getData();
+
+            switch (encryptionType)
+            {
+                case EncryptionType.CR:
+                    cr_xor(buffer);
+                    break;
+                case EncryptionType.None:
+                default:
+                    break;
+            }
+
             writer.Write(buffer, 0, buffer.Length);
         }
 
 
         public string readExtension()
         {
-            return FileType.GetExtensionByHeader(this.getData());
+            if (!insideArchive && Path.GetExtension(path) == ".obi")
+                return ".obi";
+
+            if (!insideArchive && Path.GetExtension(path) == ".eff")
+                return ".eff";
+
+            return FileType.GetExtensionByHeader(this.getData(), Path.GetFileNameWithoutExtension(path));
         }
 
         private string readName(BinaryReader reader)

@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AtumZip</RootNamespace>
     <AssemblyName>AtumZip</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>ea4120de</NuGetPackageImportStamp>
@@ -88,6 +88,7 @@
   <ItemGroup>
     <Compile Include="Archive.cs" />
     <Compile Include="ArchiveEntry.cs" />
+    <Compile Include="CharArrEx.cs" />
     <Compile Include="Dialogs\MassExtractDlg.cs">
       <SubType>Form</SubType>
     </Compile>
